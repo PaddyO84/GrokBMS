@@ -50,8 +50,8 @@ fun MainScreen(viewModel: SettingsViewModel = hiltViewModel()) {
         ) { innerPadding ->
             NavHost(navController, startDestination = "jobs", Modifier.padding(innerPadding)) {
                 composable("jobs") { JobsScreen(navController) }
-                composable("calendar") { CalendarScreen() }
-                composable("reminders") { RemindersScreen() }
+                composable("calendar") { CalendarScreen(navController) }
+                composable("reminders") { RemindersScreen(navController) }
                 composable("settings") { SettingsScreen() }
                 composable("customer/{customerId}") { backStackEntry ->
                     CustomerDetailScreen(backStackEntry.arguments?.getString("customerId")?.toLongOrNull() ?: 0, navController)

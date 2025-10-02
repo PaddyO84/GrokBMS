@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.room)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.compose.compiler)
 }
 android {
     namespace = "com.paddyo.bms"
@@ -29,7 +30,6 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
     buildFeatures { compose = true }
-    composeOptions { kotlinCompilerExtensionVersion = "1.5.14" }
     room { schemaDirectory("$projectDir/schemas") }
 }
 dependencies {
@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.itext.core)
+    implementation(libs.accompanist.pager)
     ksp(libs.hilt.compiler)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)

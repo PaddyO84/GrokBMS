@@ -13,4 +13,5 @@ class TaskViewModel @Inject constructor(private val taskDao: TaskDao) : ViewMode
     fun insertTask(task: Task) = viewModelScope.launch { taskDao.insert(task) }
     fun updateTask(task: Task) = viewModelScope.launch { taskDao.update(task) }
     fun deleteTask(task: Task) = viewModelScope.launch { taskDao.delete(task) }
+    suspend fun getTasksForDateRange(start: Long, end: Long): List<Task> = taskDao.getTasksForYear(start, end)
 }
