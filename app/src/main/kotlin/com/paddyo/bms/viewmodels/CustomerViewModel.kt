@@ -1,4 +1,5 @@
 package com.paddyo.bms.viewmodels
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paddyo.bms.data.dao.CustomerDao
@@ -7,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 @HiltViewModel
 class CustomerViewModel @Inject constructor(private val customerDao: CustomerDao) : ViewModel() {
     val customers: Flow<List<Customer>> = customerDao.getAllCustomers()

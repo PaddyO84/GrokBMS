@@ -9,12 +9,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.paddyo.bms.data.entities.BusinessProfile
+import com.paddyo.bms.viewmodels.AccountsViewModel
 import com.paddyo.bms.viewmodels.BusinessProfileViewModel
 import com.paddyo.bms.viewmodels.SettingsViewModel
+import java.util.Calendar
 @Composable
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel = hiltViewModel(),
-    businessProfileViewModel: BusinessProfileViewModel = hiltViewModel()
+    businessProfileViewModel: BusinessProfileViewModel = hiltViewModel(),
+    accountsViewModel: AccountsViewModel = hiltViewModel()
 ) {
     val settings by settingsViewModel.settings.collectAsState(initial = Settings())
     val businessProfile by businessProfileViewModel.businessProfile.collectAsState(initial = BusinessProfile())
@@ -24,6 +27,8 @@ fun SettingsScreen(
     var companyPhone by rememberSaveable { mutableStateOf(businessProfile.companyPhone) }
     var companyEmail by rememberSaveable { mutableStateOf(businessProfile.companyEmail) }
     var vatNumber by rememberSaveable { mutableStateOf(businessProfile.vatNumber ?: "") }
+    var vatRate by rememberSaveable { mutableStateOf(businessProfile.vatRate.toString()) }
+    var selectedYear by rememberSaveable { mutableStateOf(Calendar.getInstance().get(Calendar.YEAR)) }
     val logoPicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let { businessProfileViewModel.updateBusinessProfile(businessProfile.copy(logoPath = it.toString())) }
     }
@@ -114,6 +119,20 @@ fun SettingsScreen(
                 onClick = { settingsViewModel.updateReminderFrequency("Weekly") }
             )
             Text("Weekly")
+        }
+        Spacer(Modifier.height(16.dp))
+        Text("Year-End Accounts Export", style = MaterialTheme.typography.titleMedium)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            TextField(
+                value = selectedYear.toString(),
+                onValueChange = { selectedYear = it.toIntOrNull() ?: selectedYear },
+                label = { Text("Year") },
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(Modifier.width(8.dp))
+            Button(onClick = { accountsViewModel.exportYearEndAccounts(selectedYear) }) {
+                Text("Export")
+            }
         }
     }
 }

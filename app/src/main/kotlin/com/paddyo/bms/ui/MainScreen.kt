@@ -1,4 +1,5 @@
 package com.paddyo.bms.ui
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -13,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.paddyo.bms.ui.theme.BMSTheme
 import com.paddyo.bms.viewmodels.SettingsViewModel
+
 @Composable
 fun MainScreen(viewModel: SettingsViewModel = hiltViewModel()) {
     val navController = rememberNavController()

@@ -87,7 +87,7 @@ fun CalendarScreen(navController: NavController, viewModel: TaskViewModel = hilt
             }
         }
         Spacer(Modifier.height(16.dp))
-        Text("Tasks for ${java.text.SimpleDateFormat("MMM dd, yyyy").format(Date(selectedDate))}", style = MaterialTheme.typography.titleLarge)
+        Text("Tasks for ${java.text.SimpleDateFormat("MMM dd, yyyy").format(java.util.Date(selectedDate))}", style = MaterialTheme.typography.titleLarge)
         if (tasks.isEmpty()) {
             Text("No tasks for this date", Modifier.padding(16.dp))
         } else {

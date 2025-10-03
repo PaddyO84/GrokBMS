@@ -1,4 +1,5 @@
 package com.paddyo.bms.viewmodels
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paddyo.bms.data.dao.TaskDao
@@ -7,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 @HiltViewModel
 class TaskViewModel @Inject constructor(private val taskDao: TaskDao) : ViewModel() {
     fun getTasksForJob(jobId: Long): Flow<List<Task>> = taskDao.getTasksForJob(jobId)
