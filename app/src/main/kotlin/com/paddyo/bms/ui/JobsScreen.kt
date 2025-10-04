@@ -1,4 +1,5 @@
 package com.paddyo.bms.ui
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,26 +12,61 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.paddyo.bms.data.entities.Customer
-import com.paddyo.bms.viewmodels.CustomerViewModel
+import com.paddyo.bms.data.entities.Job
+import com.paddyo.bms.viewmodels.JobViewModel
+
 @Composable
-fun JobsScreen(navController: NavController, viewModel: CustomerViewModel = hiltViewModel()) {
-    val customers by viewModel.customers.collectAsState(initial = emptyList())
-    LazyColumn {
-        items(customers) { customer ->
-            CustomerItem(customer) { navController.navigate("customer/${customer.id}") }
+fun JobsScreen(
+    navController: NavController,
+    customerId: Long? = null,
+    viewModel: JobViewModel = hiltViewModel()
+) {
+    val jobs by viewModel.jobs.collectAsState()
+    
+    // Load jobs based on whether a customerId is provided
+    if (customerId != null) {
+        viewModel.loadJobsForCustomer(customerId)
+    } else {
+        viewModel.loadJobs()
+    }
+
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                navController.navigate("add_job${customerId?.let { "/$it" } ?: ""}")
+            }) {
+                Text("+")
+            }
+        }
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            items(jobs) { job ->
+                JobItem(job = job, onClick = {
+                    viewModel.selectJob(job.id)
+                    navController.navigate("job_detail/${job.id}")
+                })
+            }
         }
     }
 }
+
 @Composable
-fun CustomerItem(customer: Customer, onClick: () -> Unit) {
+fun JobItem(job: Job, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(8.dp).clickable(onClick = onClick)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable { onClick() }
     ) {
-        Column(Modifier.padding(16.dp)) {
-            Text(customer.name, style = MaterialTheme.typography.titleMedium)
-            customer.companyName?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
-            Text(customer.email, style = MaterialTheme.typography.bodySmall)
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = job.description, style = MaterialTheme.typography.titleMedium)
+            Text(text = "Status: ${job.status}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Requested: ${job.dateRequested}", style = MaterialTheme.typography.bodySmall)
+            Text(text = "Total Cost: ${(job.labourCosts + job.materialCosts)}", style = MaterialTheme.typography.bodySmall)
         }
     }
 }

@@ -5,16 +5,62 @@ import androidx.lifecycle.viewModelScope
 import com.paddyo.bms.data.dao.JobDao
 import com.paddyo.bms.data.entities.Job
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class JobViewModel @Inject constructor(private val jobDao: JobDao) : ViewModel() {
-    fun getJobsForCustomer(customerId: Long): Flow<List<Job>> = jobDao.getJobsForCustomer(customerId)
-    fun getAllJobs(): Flow<List<Job>> = jobDao.getAllJobs()
-    fun insertJob(job: Job) = viewModelScope.launch { jobDao.insert(job) }
-    fun updateJob(job: Job) = viewModelScope.launch { jobDao.update(job) }
-    fun deleteJob(job: Job) = viewModelScope.launch { jobDao.delete(job) }
-    fun getJobById(id: Long): Flow<Job> = jobDao.getJobById(id)
+class JobViewModel @Inject constructor(
+    private val jobDao: JobDao
+) : ViewModel() {
+    private val _jobs = MutableStateFlow<List<Job>>(emptyList())
+    val jobs: StateFlow<List<Job>> = _jobs.asStateFlow()
+
+    private val _selectedJob = MutableStateFlow<Job?>(null)
+    val selectedJob: StateFlow<Job?> = _selectedJob.asStateFlow()
+
+    fun loadJobs() {
+        viewModelScope.launch {
+            jobDao.getAllJobs().collect { jobList ->
+                _jobs.value = jobList
+            }
+        }
+    }
+
+    fun loadJobsForCustomer(customerId: Long) {
+        viewModelScope.launch {
+            jobDao.getJobsForCustomer(customerId).collect { jobList ->
+                _jobs.value = jobList
+            }
+        }
+    }
+
+    fun selectJob(jobId: Long) {
+        viewModelScope.launch {
+            _selectedJob.value = jobDao.getJobById(jobId)
+        }
+    }
+
+    fun addJob(
+        customerId: Long,
+        description: String,
+        dateRequested: String,
+        status: String,
+        labourCosts: Double,
+        materialCosts: Double
+    ) {
+        viewModelScope.launch {
+            val job = Job(
+                customerId = customerId,
+                description = description,
+                dateRequested = dateRequested,
+                status = status,
+                labourCosts = labourCosts,
+                materialCosts = materialCosts
+            )
+            jobDao.insert(job)
+        }
+    }
 }
