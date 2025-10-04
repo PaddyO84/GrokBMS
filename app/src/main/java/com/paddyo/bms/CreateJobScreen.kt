@@ -16,14 +16,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun CreateJobScreen(customerId: Int, navController: NavController) {
     // Placeholder state (replace with Room database)
     var description by remember { mutableStateOf("") }
-    var dateRequested by remember { mutableStateOf(LocalDate.now().toString()) }
+    var dateRequested by remember { mutableStateOf(LocalDate.now()) }
+    var showDatePicker by remember { mutableStateOf(false) }
     var vendors by remember { mutableStateOf("") }
     var laborItems by remember { mutableStateOf(listOf<LaborItem>()) }
     var materialItems by remember { mutableStateOf(listOf<MaterialItem>()) }
@@ -36,6 +39,43 @@ fun CreateJobScreen(customerId: Int, navController: NavController) {
     }
     val workImagePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.toString()?.let { workImages = workImages + it }
+    }
+
+    // Date formatter for display
+    val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+
+    // Date picker dialog
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = { showDatePicker = false }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDatePicker = false }
+                ) { Text("Cancel") }
+            }
+        ) {
+            DatePicker(
+                state = rememberDatePickerState(
+                    initialSelectedDateMillis = dateRequested
+                        .atStartOfDay(ZoneId.systemDefault())
+                        .toInstant()
+                        .toEpochMilli()
+                ),
+                modifier = Modifier.padding(16.dp),
+                title = { Text("Select Date Requested") }
+            ) { selectedDateMillis ->
+                selectedDateMillis?.let {
+                    dateRequested = Instant.ofEpochMilli(it)
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
+                }
+            }
+        }
     }
 
     Scaffold(
@@ -67,15 +107,18 @@ fun CreateJobScreen(customerId: Int, navController: NavController) {
             }
             item {
                 OutlinedTextField(
-                    value = dateRequested,
-                    onValueChange = { dateRequested = it },
+                    value = dateRequested.format(dateFormatter),
+                    onValueChange = { /* Read-only, use date picker */ },
                     label = { Text("Date Requested") },
                     trailingIcon = {
-                        IconButton(onClick = { /* TODO: Show date picker */ }) {
+                        IconButton(onClick = { showDatePicker = true }) {
                             Icon(Icons.Filled.DateRange, contentDescription = "Pick Date")
                         }
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showDatePicker = true },
+                    readOnly = true
                 )
             }
             item {
@@ -189,7 +232,7 @@ fun CreateJobScreen(customerId: Int, navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
-                    enabled = description.isNotBlank() && dateRequested.isNotBlank()
+                    enabled = description.isNotBlank() && dateRequested != null
                 ) {
                     Text("Save Job")
                 }
