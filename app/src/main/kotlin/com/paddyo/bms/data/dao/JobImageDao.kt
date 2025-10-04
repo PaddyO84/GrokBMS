@@ -1,12 +1,15 @@
 package com.paddyo.bms.data.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
-    suspend fun insert(image: JobImage)
+import androidx.room.Insert
+import androidx.room.Query
+import com.paddyo.bms.data.entities.JobImage
 
-    @Update
-    suspend fun update(image: JobImage)
+@Dao
+interface JobImageDao {
+    @Insert
+    suspend fun insert(jobImage: JobImage)
 
-    @Delete
-    suspend fun delete(image: JobImage)
+    @Query("SELECT * FROM job_images WHERE jobId = :jobId")
+    suspend fun getImagesForJob(jobId: Long): List<JobImage>
 }
