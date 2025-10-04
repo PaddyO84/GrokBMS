@@ -10,6 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://repo.itextpdf.com/release") }
     }
 }
 rootProject.name = "GrokBMS"
