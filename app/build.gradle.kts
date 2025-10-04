@@ -48,10 +48,17 @@ android {
     room {
         schemaDirectory("$projectDir/schemas")
     }
+
+    packaging {
+        resources {
+            excludes += "META-INF/native-image/reflect-config.json"
+        }
+    }
 }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -65,7 +72,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.itext.core)
+    implementation(libs.itextpdf)
     implementation(libs.accompanist.pager)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
