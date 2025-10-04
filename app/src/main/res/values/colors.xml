@@ -2,8 +2,10 @@
 <resources>
     <color name="md_theme_primary">#FF6200EE</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
-    <color name="md_theme_background">#FFFFFF</color>
-    <color name="md_theme_onBackground">#000000</color>
+    <color name="md_theme_primary_container">#FFBB86FC</color>
+    <color name="md_theme_onPrimary_container">#FF000000</color>
     <color name="md_theme_secondary">#FF03DAC5</color>
-    <color name="md_theme_onSecondary">#000000</color>
+    <color name="md_theme_onSecondary">#FF000000</color>
+    <color name="md_theme_background">#FFFFFF</color>
+    <color name="md_theme_onBackground">#FF000000</color>
 </resources>
