@@ -10,14 +10,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import java.time.Instant
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -25,8 +25,9 @@ import java.time.format.DateTimeFormatter
 fun CreateJobScreen(customerId: Int, navController: NavController) {
     // Placeholder state (replace with Room database)
     var description by remember { mutableStateOf("") }
-    var dateRequested by remember { mutableStateOf(LocalDate.now()) }
+    var dateTimeRequested by remember { mutableStateOf(LocalDateTime.now()) }
     var showDatePicker by remember { mutableStateOf(false) }
+    var showTimePicker by remember { mutableStateOf(false) }
     var vendors by remember { mutableStateOf("") }
     var laborItems by remember { mutableStateOf(listOf<LaborItem>()) }
     var materialItems by remember { mutableStateOf(listOf<MaterialItem>()) }
@@ -41,8 +42,8 @@ fun CreateJobScreen(customerId: Int, navController: NavController) {
         uri?.toString()?.let { workImages = workImages + it }
     }
 
-    // Date formatter for display
-    val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+    // Date and time formatter for display
+    val dateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm")
 
     // Date picker dialog
     if (showDatePicker) {
@@ -61,8 +62,8 @@ fun CreateJobScreen(customerId: Int, navController: NavController) {
         ) {
             DatePicker(
                 state = rememberDatePickerState(
-                    initialSelectedDateMillis = dateRequested
-                        .atStartOfDay(ZoneId.systemDefault())
+                    initialSelectedDateMillis = dateTimeRequested
+                        .atZone(ZoneId.systemDefault())
                         .toInstant()
                         .toEpochMilli()
                 ),
@@ -70,10 +71,40 @@ fun CreateJobScreen(customerId: Int, navController: NavController) {
                 title = { Text("Select Date Requested") }
             ) { selectedDateMillis ->
                 selectedDateMillis?.let {
-                    dateRequested = Instant.ofEpochMilli(it)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
+                    dateTimeRequested = dateTimeRequested.with(
+                        Instant.ofEpochMilli(it)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                    )
                 }
+            }
+        }
+    }
+
+    // Time picker dialog
+    if (showTimePicker) {
+        TimePickerDialog(
+            onDismissRequest = { showTimePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = { showTimePicker = false }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showTimePicker = false }
+                ) { Text("Cancel") }
+            }
+        ) {
+            TimePicker(
+                state = rememberTimePickerState(
+                    initialHour = dateTimeRequested.hour,
+                    initialMinute = dateTimeRequested.minute,
+                    is24Hour = false
+                ),
+                modifier = Modifier.padding(16.dp)
+            ) { state ->
+                dateTimeRequested = dateTimeRequested.withHour(state.hour).withMinute(state.minute)
             }
         }
     }
@@ -107,12 +138,17 @@ fun CreateJobScreen(customerId: Int, navController: NavController) {
             }
             item {
                 OutlinedTextField(
-                    value = dateRequested.format(dateFormatter),
-                    onValueChange = { /* Read-only, use date picker */ },
-                    label = { Text("Date Requested") },
+                    value = dateTimeRequested.format(dateTimeFormatter),
+                    onValueChange = { /* Read-only, use pickers */ },
+                    label = { Text("Date and Time Requested") },
                     trailingIcon = {
-                        IconButton(onClick = { showDatePicker = true }) {
-                            Icon(Icons.Filled.DateRange, contentDescription = "Pick Date")
+                        Row {
+                            IconButton(onClick = { showDatePicker = true }) {
+                                Icon(Icons.Filled.DateRange, contentDescription = "Pick Date")
+                            }
+                            IconButton(onClick = { showTimePicker = true }) {
+                                Icon(Icons.Filled.AccessTime, contentDescription = "Pick Time")
+                            }
                         }
                     },
                     modifier = Modifier
@@ -232,7 +268,7 @@ fun CreateJobScreen(customerId: Int, navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
-                    enabled = description.isNotBlank() && dateRequested != null
+                    enabled = description.isNotBlank() && dateTimeRequested != null
                 ) {
                     Text("Save Job")
                 }
@@ -285,4 +321,37 @@ fun MaterialItemRow(material: MaterialItem, onClick: () -> Unit) {
             Text(text = "$${material.cost}", style = MaterialTheme.typography.bodyMedium)
         }
     }
+}
+
+@Composable
+fun TimePickerDialog(
+    onDismissRequest: () -> Unit,
+    confirmButton: @Composable () -> Unit,
+    dismissButton: @Composable () -> Unit,
+    content: @Composable (TimePickerState) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        confirmButton = confirmButton,
+        dismissButton = dismissButton,
+        text = { content(TimePickerState()) }
+    )
+}
+
+@Composable
+fun TimePickerState(
+    initialHour: Int = LocalDateTime.now().hour,
+    initialMinute: Int = LocalDateTime.now().minute,
+    is24Hour: Boolean = false
+): TimePickerState {
+    return remember { TimePickerState(initialHour, initialMinute, is24Hour) }
+}
+
+class TimePickerState(
+    val initialHour: Int,
+    val initialMinute: Int,
+    val is24Hour: Boolean
+) {
+    var hour by mutableStateOf(initialHour)
+    var minute by mutableStateOf(initialMinute)
 }
