@@ -2,6 +2,7 @@ package com.paddyo.bms.data.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -11,7 +12,8 @@ import androidx.room.PrimaryKey
         parentColumns = ["id"],
         childColumns = ["customerId"],
         onDelete = ForeignKey.CASCADE
-    )]
+    )],
+    indices = [Index(value = ["customerId"])]
 )
 data class Job(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
