@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.paddyo.bms.data.AppDatabase
+import com.paddyo.bms.data.entities.AppDatabase
 import com.paddyo.bms.data.entities.*
 import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter

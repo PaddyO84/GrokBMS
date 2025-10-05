@@ -2,7 +2,7 @@ package com.paddyo.bms.di
 
 import android.content.Context
 import androidx.room.Room
-import com.paddyo.bms.data.AppDatabase
+import com.paddyo.bms.data.entities.AppDatabase
 import com.paddyo.bms.data.dao.*
 import dagger.Module
 import dagger.Provides

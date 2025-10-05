@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.paddyo.bms.data.entities.Settings
 import com.paddyo.bms.data.entities.SettingsDao
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-kotlinx.coroutines.flow.MutableStateFlow
-kotlinx.coroutines.launch
-javax.inject.Inject
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(

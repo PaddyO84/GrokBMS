@@ -4,7 +4,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.paddyo.bms.data.AppDatabase
+import com.paddyo.bms.data.entities.AppDatabase
 class ReminderWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params) {
     override suspend fun doWork(): Result {
         val db = AppDatabase.getDatabase(applicationContext)
