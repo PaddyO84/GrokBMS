@@ -20,4 +20,3 @@ interface CustomerDao {
     @Query("DELETE FROM customers WHERE id = :id")
     suspend fun delete(id: Long)
 }
-
