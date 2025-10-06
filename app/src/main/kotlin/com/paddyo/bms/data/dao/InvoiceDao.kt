@@ -1,12 +1,15 @@
 package com.paddyo.bms.data.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
-    suspend fun update(invoice: Invoice)
+import androidx.room.Insert
+import androidx.room.Query
+import com.paddyo.bms.data.entities.Invoice
 
-    @Delete
-    suspend fun delete(invoice: Invoice)
+@Dao
+interface InvoiceDao {
+    @Insert
+    suspend fun insert(invoice: Invoice)
 
-    @Query("SELECT * FROM invoices WHERE issueDate BETWEEN :start AND :end")
-    suspend fun getInvoicesForYear(start: Long, end: Long): List<Invoice>
+    @Query("SELECT * FROM invoices WHERE jobId = :jobId")
+    suspend fun getInvoicesForJob(jobId: Long): List<Invoice>
 }

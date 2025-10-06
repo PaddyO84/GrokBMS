@@ -2,45 +2,37 @@ package com.paddyo.bms.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import com.paddyo.bms.data.dao.SettingsDao
 import com.paddyo.bms.data.entities.Settings
-import com.paddyo.bms.workers.BackupWorker
-import com.paddyo.bms.workers.ReminderWorker
+import com.paddyo.bms.data.entities.SettingsDao
 import dagger.hilt.android.lifecycle.HiltViewModel
-    kotlinx.coroutines.flow.Flow
-    kotlinx.coroutines.launch
-    java.util.concurrent.TimeUnit
-    javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val settingsDao: SettingsDao,
-    private val workManager: WorkManager
+    private val settingsDao: SettingsDao
 ) : ViewModel() {
-    val settings: Flow<Settings> = settingsDao.getSettings()
-    fun updateBackupLocation(location: String) = viewModelScope.launch {
-        val current = settingsDao.getSettings().firstOrNull() ?: Settings()
-        settingsDao.update(current.copy(backupLocation = location))
-        scheduleBackup()
+
+    private val _settings = MutableStateFlow<Settings?>(null)
+    val settings: StateFlow<Settings?> = _settings
+
+    init {
+        loadSettings()
     }
-    fun updateTheme(theme: String) = viewModelScope.launch {
-        val current = settingsDao.getSettings().firstOrNull() ?: Settings()
-        settingsDao.update(current.copy(theme = theme))
+
+    private fun loadSettings() {
+        viewModelScope.launch {
+            settingsDao.getSettings(1).collect { settings ->
+                _settings.value = settings
+            }
+        }
     }
-    fun updateReminderFrequency(frequency: String) = viewModelScope.launch {
-        val current = settingsDao.getSettings().firstOrNull() ?: Settings()
-        settingsDao.update(current.copy(reminderFrequency = frequency))
-        scheduleReminders()
-    }
-    private fun scheduleBackup() {
-        val request = PeriodicWorkRequestBuilder<BackupWorker>(1, TimeUnit.DAYS).build()
-        workManager.enqueueUniquePeriodicWork("backup", ExistingPeriodicWorkPolicy.REPLACE, request)
-    }
-    private fun scheduleReminders() {
-        val request = PeriodicWorkRequestBuilder<ReminderWorker>(1, TimeUnit.DAYS).build()
-        workManager.enqueueUniquePeriodicWork("reminders", ExistingPeriodicWorkPolicy.REPLACE, request)
+
+    fun updateSettings(settings: Settings) {
+        viewModelScope.launch {
+            settingsDao.update(settings)
+        }
     }
 }
