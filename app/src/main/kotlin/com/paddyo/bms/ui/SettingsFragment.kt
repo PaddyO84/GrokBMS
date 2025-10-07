@@ -44,7 +44,7 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    override onDestroyView() {
+    override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
