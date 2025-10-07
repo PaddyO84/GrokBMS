@@ -1,5 +1,4 @@
 plugins {
-    id("kotlin-kapt")
     id("com.android.application") version "8.5.0"
     id("org.jetbrains.kotlin.android") version "2.0.0"
     id("org.jetbrains.kotlin.kapt") version "2.0.0"
@@ -64,7 +63,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-compiler:2.51.1")
     implementation("com.google.code.gson:gson:2.11.0")
-    implementation("com.kizitonwose.calendar:calendar-compose:2.5.1")
+    implementation("com.kizitonwose.calendar:view:2.8.0")
     implementation("androidx.work:work-runtime-ktx:2.9.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
