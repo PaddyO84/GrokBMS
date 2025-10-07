@@ -1,34 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp">
+<?xml version='1.0' encoding='utf-8'?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:ns0="http://schemas.android.com/apk/res/android" xmlns:ns1="http://schemas.android.com/apk/res-auto" ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:padding="16dp" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/jobTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_constraintStart_toStartOf="parent"
-        android:layout_constraintTop_toTopOf="parent"
-        android:layout_constraintEnd_toStartOf="@id/jobStatus" />
+    <TextView ns0:id="@+id/jobTitle" ns0:layout_width="0dp" ns0:layout_height="wrap_content" ns0:textSize="16sp" ns0:textStyle="bold" ns1:layout_constraintStart_toStartOf="parent" ns1:layout_constraintTop_toTopOf="parent" ns1:layout_constraintEnd_toStartOf="@id/jobStatus" />
 
-    <TextView
-        android:id="@+id/jobStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_constraintEnd_toEndOf="parent"
-        android:layout_constraintTop_toTopOf="parent" />
+    <TextView ns0:id="@+id/jobStatus" ns0:layout_width="wrap_content" ns0:layout_height="wrap_content" ns0:textSize="14sp" ns1:layout_constraintEnd_toEndOf="parent" ns1:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/jobDate"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_constraintStart_toStartOf="parent"
-        android:layout_constraintTop_toBottomOf="@id/jobTitle" />
+    <TextView ns0:id="@+id/jobDate" ns0:layout_width="0dp" ns0:layout_height="wrap_content" ns0:textSize="14sp" ns1:layout_constraintStart_toStartOf="parent" ns1:layout_constraintTop_toBottomOf="@id/jobTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
