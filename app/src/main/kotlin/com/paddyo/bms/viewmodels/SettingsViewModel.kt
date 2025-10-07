@@ -2,37 +2,21 @@ package com.paddyo.bms.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.paddyo.bms.data.entities.Settings
-import com.paddyo.bms.data.entities.SettingsDao
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
-    private val settingsDao: SettingsDao
-) : ViewModel() {
-
-    private val _settings = MutableStateFlow<Settings?>(null)
-    val settings: StateFlow<Settings?> = _settings
-
-    init {
-        loadSettings()
-    }
-
-    private fun loadSettings() {
+class SettingsViewModel @Inject constructor() : ViewModel() {
+    // Placeholder for backup location and theme settings
+    fun setBackupLocation(uri: String) {
         viewModelScope.launch {
-            settingsDao.getSettings(1).collect { settings ->
-                _settings.value = settings
-            }
+            // TODO: Implement backup logic
         }
     }
 
-    fun updateSettings(settings: Settings) {
+    fun setDarkMode(enabled: Boolean) {
         viewModelScope.launch {
-            settingsDao.update(settings)
+            // TODO: Implement theme toggle
         }
     }
 }

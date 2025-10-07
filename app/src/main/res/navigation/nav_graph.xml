@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/customerListFragment">
+
+    <fragment
+        android:id="@+id/customerListFragment"
+        android:name="com.paddyo.bms.ui.CustomerListFragment"
+        android:label="Customers">
+        <action
+            android:id="@+id/action_customerListFragment_to_customerProfileFragment"
+            app:destination="@id/customerProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/customerProfileFragment"
+        android:name="com.paddyo.bms.ui.CustomerProfileFragment"
+        android:label="Customer Profile">
+        <argument
+            android:name="customerId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_customerProfileFragment_to_newJobFragment"
+            app:destination="@id/newJobFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/jobListFragment"
+        android:name="com.paddyo.bms.ui.JobListFragment"
+        android:label="Jobs" />
+    <fragment
+        android:id="@+id/newJobFragment"
+        android:name="com.paddyo.bms.ui.NewJobFragment"
+        android:label="New Job">
+        <argument
+            android:name="customerId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.paddyo.bms.ui.CalendarFragment"
+        android:label="Calendar" />
+    <fragment
+        android:id="@+id/remindersFragment"
+        android:name="com.paddyo.bms.ui.RemindersFragment"
+        android:label="Reminders" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.paddyo.bms.ui.SettingsFragment"
+        android:label="Settings" />
+</navigation>

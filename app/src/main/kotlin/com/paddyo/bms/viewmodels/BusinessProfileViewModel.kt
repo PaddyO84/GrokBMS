@@ -2,11 +2,10 @@ package com.paddyo.bms.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paddyo.bms.data.BusinessProfileDao
 import com.paddyo.bms.data.entities.BusinessProfile
-import com.paddyo.bms.data.entities.BusinessProfileDao
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -14,25 +13,17 @@ import javax.inject.Inject
 class BusinessProfileViewModel @Inject constructor(
     private val businessProfileDao: BusinessProfileDao
 ) : ViewModel() {
+    val businessProfile: Flow<BusinessProfile?> = businessProfileDao.getBusinessProfile()
 
-    private val _businessProfile = MutableStateFlow<BusinessProfile?>(null)
-    val businessProfile: StateFlow<BusinessProfile?> = _businessProfile
-
-    init {
-        loadBusinessProfile()
-    }
-
-    private fun loadBusinessProfile() {
+    fun saveBusinessProfile(profile: BusinessProfile) {
         viewModelScope.launch {
-            businessProfileDao.getBusinessProfile(1).collect { profile ->
-                _businessProfile.value = profile
-            }
+            businessProfileDao.insertBusinessProfile(profile)
         }
     }
 
     fun updateBusinessProfile(profile: BusinessProfile) {
         viewModelScope.launch {
-            businessProfileDao.update(profile)
+            businessProfileDao.updateBusinessProfile(profile)
         }
     }
 }

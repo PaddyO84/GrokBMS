@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <data-extraction-rules>
     <cloud-backup>
-        <include domain="file" path="."/>
+        <include domain="database" path="app_database" />
     </cloud-backup>
 </data-extraction-rules>

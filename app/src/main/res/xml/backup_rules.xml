@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
-    <include domain="file" path="."/>
-    <exclude domain="file" path="cache/."/>
+    <include domain="database" path="app_database" />
 </full-backup-content>
