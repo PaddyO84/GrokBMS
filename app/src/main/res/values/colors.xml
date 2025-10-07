@@ -8,4 +8,5 @@
     <color name="md_theme_onSecondary">#FF000000</color>
     <color name="md_theme_background">#FFFFFF</color>
     <color name="md_theme_onBackground">#FF000000</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
 </resources>
