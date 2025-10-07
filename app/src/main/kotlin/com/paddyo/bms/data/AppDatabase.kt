@@ -3,14 +3,13 @@ package com.paddyo.bms.data
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.paddyo.bms.data.converters.ListConverter
-import com.paddyo.bms.data.entities.*
+import com.paddyo.bms.data.daos.CustomerDao
+import com.paddyo.bms.data.entities.Customer
+import com.paddyo.bms.data.entities.Job
+import com.paddyo.bms.data.entities.Task
 
-@Database(entities = [Customer::class, Job::class, Task::class, BusinessProfile::class], version = 2)
-@TypeConverters(ListConverter::class)
+@Database(entities = [Customer::class, Job::class, Task::class], version = 1, exportSchema = false)
+@TypeConverters(TypeConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun customerDao(): CustomerDao
-    abstract fun jobDao(): JobDao
-    abstract fun taskDao(): TaskDao
-    abstract fun businessProfileDao(): BusinessProfileDao
 }
